@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRESAGE – Planning du jour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="planning.css" />
+</head>
+<body>
+  <!-- Canevas de taille fixe, mis à l'échelle par JS pour tenir dans l'écran -->
+  <div id="stage" class="stage">
+
+    <!-- ===== HEADER ===== -->
+    <header class="hero">
+      <div class="hero__photo" role="img" aria-label="Séance de simulation médicale"></div>
+      <img class="hero__logo" src="../assets/presage_logo.png" alt="PRESAGE" />
+
+      <div class="hero__titles">
+        <h1 class="hero__title">Bienvenue à PRESAGE</h1>
+        <p class="hero__date" id="date">Chargement…</p>
+      </div>
+    </header>
+
+    <!-- ===== PLANNING ===== -->
+    <main class="planning" id="planning" aria-label="Planning des formations du jour">
+      <!-- Cartes injectées par app.js -->
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <img src="../assets/ufr3s_logo.png" alt="UFR3S Médecine" class="footer__logo" />
+    </footer>
+
+  </div>
+
+  <script src="planning.js"></script>
+</body>
+</html>
