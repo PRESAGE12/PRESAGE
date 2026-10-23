@@ -109,8 +109,18 @@ function changerPhotoHero() {
   el.style.backgroundPosition = photo.position;
 }
 
+let lastClockLabel = "";
+function updateClock() {
+  const label = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  if (label !== lastClockLabel) {           // écrit dans le DOM seulement quand la minute change
+    $("heure").textContent = label;
+    lastClockLabel = label;
+  }
+}
+
 function tick() {
   updateDate();
+  updateClock();
   refreshPastState();                        // met à jour les cartes passées/prochaine
 }
 

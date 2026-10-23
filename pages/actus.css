@@ -22,6 +22,7 @@
   --ombre-logo-opacite: 0.25;
   --trait-titre: rgba(255, 255, 255, 0.43);
   --date-opacite: 0.8;
+  --c-text-muted:    rgba(255,255,255,.78);
 
   /* --- Géométrie (SVG) ---------------------------------------------------- */
   --photo-hauteur: 470px;                /* zone visible de la photo */
@@ -39,7 +40,7 @@
   --logo-presage-l: 219px;
   --logo-presage-h: 238px;
   --horloge-x: 795px;
-  --horloge-y: 535px;
+  --horloge-y: 520px;
   --horloge-l: 182px;
   --horloge-h: 65px;
   --rayon-carte: 54px;
@@ -53,7 +54,7 @@
   --carte-titre-taille: 35px;            /* estimé : capitale 24,5 px / 0,70 */
   --carte-titre-graisse: 600;
   --horloge-taille: 42px;                /* estimé : chiffres 29,9 px / 0,70 */
-  --horloge-graisse: 700;
+  --horloge-graisse: 550;
 
   /* --- Typographie du contenu des cartes (estimé : zones blanches de la maquette) */
   --texte-taille-s: 20px;
@@ -157,7 +158,7 @@ html, body {
   background: rgba(32, 56, 100, var(--horloge-fond-opacite));
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: inset 0 0 0 1px var(--horloge-contour), 0 4px 10px rgba(0, 0, 0, 0.35); /* ombre : estimé */
+ /* box-shadow: inset 0 0 0 1px var(--horloge-contour), 0 4px 10px rgba(0, 0, 0, 0.35); /* ombre : estimé */
 }
 #heure {
   position: relative;
@@ -185,12 +186,13 @@ html, body {
   background: var(--trait-titre);
 }
 #date {
-  left: 146px; top: 547px;
+  left: 146px; top: 537px;
   font-size: var(--date-taille);
   font-weight: var(--date-graisse);
   line-height: 1;
   white-space: nowrap;
   opacity: var(--date-opacite);
+  color:var(--c-text-muted);
 }
 
 /* ---- Cartes ------------------------------------------------------------ */

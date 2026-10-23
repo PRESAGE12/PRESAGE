@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Montserrat : même police que l'horloge de la page Actus -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="planning.css" />
 </head>
 <body>
@@ -14,9 +16,17 @@
   <div id="stage" class="stage">
 
     <!-- ===== HEADER ===== -->
-    <header class="hero">
-      <div class="hero__photo" role="img" aria-label="Séance de simulation médicale"></div>
+<header class="hero">
+      <div class="hero-widget">
+        <rssapp-carousel id="x9Wq4ILQM3VaPLJw"></rssapp-carousel>
+        <script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
+      </div>
       <img class="hero__logo" src="../assets/presage_logo.png" alt="PRESAGE" />
+
+      <!-- Horloge (mêmes position et style que sur la page Actus) -->
+      <div class="hero__clock" id="horloge">
+        <span id="heure">--:--</span>
+      </div>
 
       <div class="hero__titles">
         <h1 class="hero__title">Bienvenue à PRESAGE</h1>
