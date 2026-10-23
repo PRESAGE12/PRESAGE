@@ -14,6 +14,8 @@
   --c-text-muted:    rgba(255,255,255,.78);
   --c-footer-bg:     #ffffff;
   --c-clock-bg:      rgba(15,30,60,.85);
+  --lueur-panneau: rgba(255, 255, 255, 0.35);
+
 
   /* --- Typographie --- */
   --font: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
@@ -113,6 +115,8 @@ html, body {
   clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 100%);
   z-index: 1;
   pointer-events: none;
+   /* lueur extérieure : SVG = flou σ 6,5, décalage -4 px, contour 10 px */
+  box-shadow: 0 -4px 13px 5px var(--lueur-panneau);
 }
 
 .hero__logo {
