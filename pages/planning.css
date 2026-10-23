@@ -150,7 +150,7 @@ html, body {
 .hero__clock {
   position: absolute;
   left: 795px;
-  top: 520px;
+  top: 516px;
   width: 182px;
   height: 65px;
   z-index: 3;
