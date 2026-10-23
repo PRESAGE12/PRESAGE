@@ -15,7 +15,7 @@
   --bleu-fonce: #0B1B3D;                 /* pastille de l'horloge */
   --blanc: #FFFFFF;
   --panneau-cartes: rgba(255, 255, 255, 0.12);
-  --voile-photo: rgba(0, 0, 0, 0.3);
+  --voile-photo: rgba(0, 0, 0, 0);
   --horloge-fond-opacite: 0.8;
   --horloge-contour: rgba(255, 255, 255, 0.3);
   --lueur-panneau: rgba(255, 255, 255, 0.35);
