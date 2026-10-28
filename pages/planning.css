@@ -1,0 +1,340 @@
+/* =========================================================
+   PRESAGE – Affichage dynamique (Cenareo)
+   Design tokens → layout → composants → états
+   ========================================================= */
+
+:root {
+  /* --- Palette (issue des maquettes) --- */
+  --c-bg:            #203864;   /* bleu nuit principal */
+  --c-bg-card:       #3b5077;   /* fond des cartes */
+  --c-bg-cell:       #203864;   /* cellules internes */
+  --c-border-soft:   rgba(255,255,255,.14);
+  --c-border-cell:   rgba(120,150,200,.35);
+  --c-text:          #ffffff;
+  --c-text-muted:    rgba(255,255,255,.78);
+  --c-footer-bg:     #ffffff;
+  --c-clock-bg:      rgba(15,30,60,.85);
+  --lueur-panneau: rgba(255, 255, 255, 0.35);
+
+
+  /* --- Typographie --- */
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+
+  /* --- Rayons / ombres --- */
+  --radius-card: 22px;
+  --radius-cell: 16px;
+  --shadow-card: 0 6px 18px rgba(0,0,0,.28);
+
+  /* --- Dimensions du canevas (portrait par défaut, cf. maquettes) --- */
+  --stage-w: 1080px;
+  --stage-h: 1920px;
+  --hero-h: 600px;
+  --footer-h: 150px;
+  --gap: 20px;
+  --pad-x: 40px;
+
+  /* --- Tailles de texte (ajustées par classes de densité) --- */
+  --fs-time: 42px;
+  --fs-code: 26px;
+  --fs-title: 32px;
+  --fs-place: 28px;
+  --card-pad: 10px;
+
+  /* --- Photo du header (positionnée par JS) --- */
+  --hero-photo-pos: 50% 60%;
+}
+
+/* Variante paysage 1920×1080 */
+body[data-orientation="landscape"] {
+  --stage-w: 1920px;
+  --stage-h: 1080px;
+  --hero-h: 230px;
+  --footer-h: 100px;
+  --gap: 16px;
+  --pad-x: 48px;
+}
+
+/* ---------- Reset & verrouillage écran ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;           /* zéro défilement */
+  background: #0f1d38;
+  font-family: var(--font);
+  color: var(--c-text);
+  cursor: none;               /* pas de curseur sur écran public */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Canevas fixe (mis à l'échelle via JS) ---------- */
+.stage {
+  position: absolute;
+  top: 0; left: 0;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  background: var(--c-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* =========================================================
+   HERO / HEADER
+   ========================================================= */
+.hero {
+  position: relative;
+  flex: 0 0 var(--hero-h);
+  background: var(--c-bg);
+}
+
+.hero-widget {
+  position: absolute;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: 75%;
+  flex-shrink: 0;
+  margin: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-widget rssapp-carousel {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  background: var(--c-bg);
+  clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 100%);
+  z-index: 1;
+  pointer-events: none;
+   /* lueur extérieure : SVG = flou σ 6,5, décalage -4 px, contour 10 px */
+  box-shadow: 0 -4px 13px 5px var(--lueur-panneau);
+}
+
+.hero__logo {
+  position: absolute;
+  right: 96px;
+  bottom: 75px;               /* remonté pour laisser la place à l'horloge */
+  width: 190px;
+  height: auto;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.4));
+  z-index: 3;
+}
+
+.hero__titles {
+  position: absolute;
+  left: 60px;
+  bottom: 28px;
+  z-index: 2;                 /* au-dessus de la zone bleue */
+}
+
+.hero__title {
+  font-size: 58px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255,255,255,.55);
+  display: inline-block;
+}
+.hero__date {
+  margin-top: 14px;
+  padding-left: 78px;
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--c-text-muted);
+}/* ---- Horloge ---- */
+.hero__clock {
+  position: absolute;
+  left: 795px;
+  top: 516px;
+  width: 182px;
+  height: 65px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 32.5px;
+  background: rgba(32, 56, 100, .8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  /*box-shadow: inset 0 0 0 1px rgba(255,255,255,.3), 0 4px 10px rgba(0,0,0,.35);*/
+}
+#heure {
+  font-family: "Montserrat", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PLANNING
+   ========================================================= */
+.planning {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 10px var(--pad-x) 18px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;          /* cartes de hauteur égale */
+  align-content: stretch;
+}
+
+/* --- Densité : 1 à 4 cartes → aéré, 5+ → compact --- */
+.planning.is-airy   { --fs-time: 50px; --fs-code: 28px; --fs-title: 40px; --fs-place: 32px; --card-pad: 12px; }
+.planning.is-normal { --fs-time: 42px; --fs-code: 26px; --fs-title: 34px; --fs-place: 28px; --card-pad: 10px; }
+.planning.is-compact{ --fs-time: 32px; --fs-code: 20px; --fs-title: 26px; --fs-place: 22px; --card-pad: 8px; --gap: 14px; }
+.planning.is-dense  { --fs-time: 26px; --fs-code: 17px; --fs-title: 21px; --fs-place: 18px; --card-pad: 6px;  --gap: 10px; }
+
+/* 1 à 4 cartes : on évite des cartes démesurées */
+.planning.is-airy { grid-auto-rows: minmax(0, 240px); align-content: start; }
+
+/* 5 à 8+ cartes : grille 2 colonnes en paysage ; en portrait on garde
+   1 colonne jusqu'à 7 cartes puis 2 colonnes au-delà (sans débordement) */
+body[data-orientation="landscape"] .planning.is-compact,
+body[data-orientation="landscape"] .planning.is-dense { grid-template-columns: 1fr 1fr; }
+body[data-orientation="portrait"]  .planning.is-dense { grid-template-columns: 1fr 1fr; }
+
+/* ---------- Carte ---------- */
+.card {
+  display: grid;
+  grid-template-columns: 17% 1fr 27%;
+  gap: 10px;
+  padding: var(--card-pad);
+  background: var(--c-bg-card);
+  border: 3px solid var(--c-border-cell);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  min-height: fit-content;
+  overflow: visible;
+  animation: card-in .5s ease both;
+}
+
+.card__cell {
+  background: var(--c-bg-cell);
+  border: 2px solid var(--c-border-cell);
+  border-radius: var(--radius-cell);
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.card__time {
+  justify-content: center;
+  font-size: var(--fs-time);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cellule « détails » : le badge code est ancré en haut à gauche */
+.card__main {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+}
+
+.card__code {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: inline-block;
+  padding: 2px 14px;
+  font-size: var(--fs-code);
+  font-weight: 500;
+  border: 2px solid rgba(255,255,255,.55);
+  border-radius: 8px;
+  line-height: 1.25;
+}
+
+.card__title {
+  font-size: var(--fs-title);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 28px;             /* laisse la place au badge ancré */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Sans badge code, le titre remonte à sa place naturelle */
+.card__main:not(:has(.card__code)) .card__title {
+  margin-top: 0;
+}
+
+.card__place {
+  justify-content: center;
+  text-align: center;
+  padding: 8px 10px;
+  font-size: var(--fs-place);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Sessions passées : atténuées */
+.card.is-past { opacity: .45; }
+
+/* =========================================================
+   ÉTAT VIDE
+   ========================================================= */
+.empty {
+  grid-column: 1 / -1;
+  align-self: flex-start;
+  justify-self: center;
+  width: 86%;
+  marging-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  text-align: center;
+  background: var(--c-bg-card);
+  border: 3px solid var(--c-border-cell);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+}
+.empty__icon  { font-size: 90px; margin-bottom: 20px; opacity: .85; }
+.empty__title { font-size: 46px; font-weight: 600; margin-bottom: 14px; }
+.empty__text  { font-size: 30px; color: var(--c-text-muted); }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer {
+  flex: 0 0 var(--footer-h);
+  background: var(--c-footer-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+.footer__logo { height: 140px; width: auto; }
+.footer__sep  { width: 2px; height: 70px; background: #cfd6e2; }
+
+/* ---------- Animations ---------- */
+@keyframes card-in {
+  from { opacity: 0; transform: translate3d(-120px, 0, 0); }
+  to   { opacity: 1; transform: none; }   /* "none" = texte net à la fin */
+}
+
+/* Les cartes arrivent l'une après l'autre, toutes du même côté */
+.card {
+  animation: card-in 600ms cubic-bezier(.22,.8,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 150ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
+  .hero__photo { transition: none; }
+}

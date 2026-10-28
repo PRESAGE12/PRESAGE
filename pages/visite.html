@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1" />
+  <meta name="color-mode" content="dark" />
+  <title>PRESAGE – Visite (vidéo)</title>
+  <style>
+    /* Page "Visite" en mode LECTEUR VIDÉO PUR.
+       Aucun texte, aucune carte, aucun logo : juste la vidéo plein écran. */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      cursor: none;
+    }
+
+    /* La scène fait exactement 1080×1920 ; elle est ensuite mise à
+       l'échelle/centrée par main.js comme les autres pages du kiosque. */
+    .stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1080px;
+      height: 1920px;
+      background: #000;
+      overflow: hidden;
+    }
+
+    /* Le <video> remplit toute la scène, en "cover" pour ne JAMAIS
+       laisser de bandes noires latérales : on coupe légèrement plutôt
+       que d'afficher du noir. object-fit:cover préserve le ratio. */
+    .stage video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      display: block;
+      border: 0;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!--
+      Source vidéo plein-bleed (paysage ou portrait).
+      PAS de `autoplay` : la lecture est déclenchée par main.js via postMessage
+      lorsque la page visite devient active, afin d'éviter que la vidéo ne
+      commence à jouer pendant qu'elle est encore masquée par les autres pages.
+      PAS de `loop` non plus : la fin de la vidéo (`ended`) est signalée à
+      main.js pour qu'il enchaîne immédiatement sur la page suivante.
+      Si le fichier n'est pas trouvé au premier emplacement, le script essaie
+      ensuite les chemins de repli listés dans SOURCES_FALLBACK.
+    -->
+    <video id="visite-video"
+           muted
+           playsinline
+           preload="auto"
+           disablepictureinpicture
+           controlslist="nodownload noplaybackrate nofullscreen noremoteplayback">
+      <!-- Source par défaut ; remplacer par la vidéo réelle du centre PRESAGE. -->
+      <source src="https://github.com/PRESAGE12/PRESAGE/releases/download/vid%C3%A9o/visite.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <script>
+    /* Pilotage de la vidéo :
+       - ne démarre PAS automatiquement au chargement de l'iframe,
+       - démarre (currentTime = 0 puis play()) quand le parent envoie
+         le message `kiosque:replay-visite` (= la page devient active),
+       - se met EN PAUSE quand le parent envoie `kiosque:pause-visite`
+         (= la page n'est plus à l'écran),
+       - signale au parent via `kiosque:visite-ended` quand la lecture
+         est terminée, sans reboucler,
+       - dispose d'un garde-fou : si la vidéo ne signale pas sa fin
+         (fichier absent, erreur de décodage...), la page signale quand même
+         la fin après DUREE_VISITE_MS = 138 000 ms (2 min 18 s). */
+    (function () {
+      'use strict';
+
+      var DUREE_VISITE_MS = 138000; // 2 min 18 s
+      var MSG_REPLAY = 'kiosque:replay-visite';
+      var MSG_PAUSE = 'kiosque:pause-visite';
+      var MSG_ENDED = 'kiosque:visite-ended';
+      /* Chemins essayés si la source principale est introuvable. */
+      var SOURCES_FALLBACK = ['../visite.mp4', 'visite.mp4', '../assets/visite.webm'];
+
+      var v = document.getElementById('visite-video');
+      if (!v) return;
+
+      var endTimer = 0;
+      var endedNotified = false;
+      var sourceIndex = 0;
+
+      /* Garantit que la vidéo est bien à 0 et en pause au démarrage,
+         même si le navigateur avait mémorisé une position précédente. */
+      try { v.pause(); } catch (_) { /* ignore */ }
+      try { v.currentTime = 0; } catch (_) { /* ignore */ }
+
+      function notifyEnded() {
+        if (endedNotified) return;
+        endedNotified = true;
+        clearTimeout(endTimer);
+        endTimer = 0;
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: MSG_ENDED }, '*');
+          }
+        } catch (_) { /* ignore */ }
+      }
+
+      function startFromBeginning() {
+        endedNotified = false;
+        clearTimeout(endTimer);
+        endTimer = 0;
+        try {
+          v.pause();
+          v.currentTime = 0;
+          v.muted = true;
+        } catch (_) { /* ignore */ }
+        var p;
+        try {
+          p = v.play();
+        } catch (_) {
+          p = null;
+        }
+        if (p && typeof p.catch === 'function') {
+          p.catch(function (err) {
+            console.warn("Lecture refusée par le navigateur :", err);/* lecture refusée : le garde-fou 138 s prendra le relais */
+          });
+        }
+        /* Garde-fou : la page « visite » dure 2 min 18 s. */
+        endTimer = setTimeout(function () {
+          try { v.pause(); } catch (_) { /* ignore */ }
+          notifyEnded();
+        }, DUREE_VISITE_MS);
+      }
+
+      function pauseVideo() {
+        clearTimeout(endTimer);
+        endTimer = 0;
+        try { v.pause(); } catch (_) { /* ignore */ }
+      }
+
+      /* Démarrage / arrêt commandés par le parent (kiosque). */
+      window.addEventListener('message', function (event) {
+        var data = event && event.data;
+        if (!data || typeof data.type !== 'string') return;
+        if (data.type === MSG_REPLAY) {
+          startFromBeginning();
+        } else if (data.type === MSG_PAUSE) {
+          pauseVideo();
+        }
+      });
+
+      /* Fin de lecture : on prévient le parent et on laisse la vidéo
+         à sa frame finale (pas de rebouclage). */
+      v.addEventListener('ended', function () {
+        try { v.pause(); } catch (_) { /* ignore */ }
+        notifyEnded();
+      }, { once: false });
+
+      /* Source principale introuvable : on essaie les chemins de repli. */
+      v.addEventListener('error', function () {
+        if (sourceIndex < SOURCES_FALLBACK.length) {
+          var nextSrc = SOURCES_FALLBACK[sourceIndex++];
+          try {
+            v.src = nextSrc;
+            v.load();
+          } catch (_) { /* ignore */ }
+        }
+      });
+
+      /* Si le navigateur charge la page déjà "en cours", on repart de 0:00. */
+      v.addEventListener('loadedmetadata', function () {
+        if (!endedNotified && !v.paused) {
+          try { v.currentTime = 0; } catch (_) { /* ignore */ }
+        }
+      });
+
+      /* Pause forcée par le navigateur : le parent décidera de la reprise.
+         On ne relance jamais tout seul hors message `kiosque:replay-visite`. */
+    })();
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

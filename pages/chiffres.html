@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <title>PRESAGE – En chiffres</title>
+
+  <!-- Polices Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700&display=swap">
+
+  <!-- QRCode.js (génération QR code côté client) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <link rel="stylesheet" href="chiffres.css">
+</head>
+<body>
+  
+  <!-- Symboles SVG (stéthoscope, chrono, bâtiment) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- Stéthoscope -->
+      <symbol id="i-stetho" viewBox="0 0 64 64">
+        <path d="M14 6h6v18a14 14 0 0 0 28 0V6h6v18a20 20 0 0 1-16 19.6V49a8 8 0 1 1-8 0v-5.4A20 20 0 0 1 14 24z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="34" cy="55" r="3.5" fill="currentColor"/>
+      </symbol>
+      <!-- Chronomètre -->
+      <symbol id="i-chrono" viewBox="0 0 64 64">
+        <circle cx="32" cy="36" r="20" fill="none" stroke="currentColor" stroke-width="3"/>
+        <path d="M32 36V20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 36l10 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M26 6h12M32 6v6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </symbol>
+      <!-- Bâtiment / salle -->
+      <symbol id="i-room" viewBox="0 0 64 64">
+        <path d="M8 56h48V20L32 8 8 20z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M22 56V36h20v20" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M28 44h2M34 44h2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </symbol>
+      <!-- Réseau / communauté -->
+      <symbol id="i-network" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="6" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="12" cy="14" r="5" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="52" cy="14" r="5" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="12" cy="50" r="5" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="52" cy="50" r="5" fill="none" stroke="currentColor" stroke-width="3"/>
+        <path d="M16 17l12 11M48 17L36 28M16 47l12-11M48 47L36 36" fill="none" stroke="currentColor" stroke-width="3"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div id="stage">
+
+    <!-- Fond photo + voile -->
+    <div id="photo">
+      <section id="photos-presage" data-photos-carousel data-base="../"></section>
+    </div>
+
+    <!-- Panneau bleu incliné + pied de page blanc -->
+    <div id="panneau-bleu"></div>
+    <div id="pied"></div>
+    <img id="logo-ufr" src="../assets/ufr3s_logo.png" alt="UFR3S">
+
+    <!-- Logo PRESAGE -->
+    <div id="logo">
+      <img src="../assets/presage_logo.png" alt="PRESAGE">
+      <div class="ombre"></div>
+    </div>
+
+    <!-- Horloge capsule -->
+    <div id="horloge">
+      <span id="heure">--:--</span>
+    </div>
+
+    <!-- En-tête : H1 + trait + date FR -->
+    <h1 id="titre">PRESAGE en chiffres</h1>
+    <div id="trait"></div>
+    <div id="date">—</div>
+
+    <!-- Grille 2x2 de cartes (entre top 636 et ~1740) -->
+    <section id="grille-chiffres">
+
+      <!-- Carte 1 : Sessions pédagogiques -->
+      <article class="carte" data-anim="gauche" style="--delai:0ms">
+        <h2>Formations</h2>
+        <div class="corps">
+          <div class="chiffre" id="c-sessions" data-target="1420">0</div>
+          <p class="sous-titre">Sessions de formation depuis le 1er Septembre</p>
+          <svg class="chiffre-icone" aria-hidden="true"><use href="#i-stetho"></use></svg>
+        </div>
+      </article>
+
+      <!-- Carte 2 : Heures de simulation -->
+      <article class="carte" data-anim="droite" style="--delai:160ms">
+        <h2>Heures cumulées</h2>
+        <div class="corps">
+          <div class="chiffre" id="c-heures" data-target="5840">0</div>
+          <p class="sous-titre">Heures de formation depuis le 1er Septembre</p>
+          <svg class="chiffre-icone" aria-hidden="true"><use href="#i-chrono"></use></svg>
+        </div>
+      </article>
+
+      <!-- Carte 3 : Salles en immersion -->
+      <article class="carte" data-anim="gauche" style="--delai:320ms">
+        <h2>Espaces en cours d'utilisation</h2>
+        <div class="corps">
+          <div class="chiffre" id="c-salles" data-target="8">0</div>
+          <p class="sous-titre">Salles occupées</p>
+          <div class="badge" id="badge-salles">
+            <span class="badge-point"></span>
+            <span class="badge-texte">Centre actif</span>
+          </div>
+          <svg class="chiffre-icone" aria-hidden="true"><use href="#i-room"></use></svg>
+        </div>
+      </article>
+
+      <!-- Carte 4 : Communauté & LinkedIn -->
+      <article class="carte" data-anim="droite" style="--delai:480ms">
+        <h2>Communauté LinkedIn</h2>
+        <div class="corps corps-linkedin">
+          <div class="linkedin-bloc">
+            <div class="chiffre" id="c-linkedin" data-target="3450">0</div>
+            <p class="sous-titre">Professionnels, formateurs et étudiants abonnés</p>
+          </div>
+          <svg class="chiffre-icone chiffre-icone-fond" aria-hidden="true"><use href="#i-network"></use></svg>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Mention de mise à jour (coin bas) -->
+    <div id="maj-info">Données mises à jour&nbsp;: <span id="maj-date">—</span></div>
+
+  </div>
+
+  <link rel="stylesheet" href="../css/photos-carousel.css">
+  <script src="../js/photos-carousel.js" defer></script>
+  <script src="chiffres.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

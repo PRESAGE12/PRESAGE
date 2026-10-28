@@ -1,0 +1,397 @@
+/* ====================================================================
+   PRESAGE – Page « En chiffres »
+   Réutilise exactement les tokens et la structure d'#stage/#photo/
+   #panneau-bleu/#horloge/#logo/#pied/#logo-ufr/#titre/#trait/#date
+   de la page actus. Ajoute uniquement la grille 2x2.
+   ==================================================================== */
+
+:root {
+  /* Tokens communs (alignés sur actus.css) */
+  --largeur: 1080px;
+  --hauteur: 1920px;
+  --photo-hauteur: 520px;
+
+  --bleu:        #203864;
+  --bleu-fonce:  #0B1B3D;
+  --blanc:       #FFFFFF;
+  --c-text-muted: rgba(255,255,255,.78);
+  --panneau-cartes: rgba(255,255,255,.12);
+
+  /* Panneau incliné (valeurs exactes d'#actus.css) */
+  --panneau-largeur: 1455.918px;
+  --panneau-hauteur: 1602.415px;
+  --panneau-matrice: matrix(0.998,0.067,-0.067,0.998,-134.314,366);
+  --lueur-panneau: rgba(255,255,255,0.35);
+
+  /* Pied + logos */
+  --pied-top: 1790px;
+  --pied-hauteur: 130px;
+  --logo-ufr-x: 290px;
+  --logo-ufr-y: 1777px;
+  --logo-ufr-l: 454px;
+  --logo-ufr-h: 130px;
+  --logo-presage-x: 780px;
+  --logo-presage-y: 300px;
+  --logo-presage-l: 219px;
+  --logo-presage-h: 238px;
+
+  /* Horloge */
+  --horloge-x: 795px;
+  --horloge-y: 520px;
+  --horloge-l: 182px;
+  --horloge-h: 65px;
+
+  /* Cartes */
+  --rayon-carte: 54px;
+
+  /* Titres & horloge */
+  --titre-taille: 60px;
+  --titre-graisse: 700;
+  --date-taille: 40px;
+  --date-graisse: 600;
+  --horloge-taille: 42px;
+  --horloge-graisse: 550;
+  --carte-titre-taille: 26px;
+  --carte-titre-graisse: 600;
+
+  --police: 'Montserrat','Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+
+  /* Animations (mêmes courbes/durées qu'#actus) */
+  --anim-duree: 0.9s;
+  --anim-courbe: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --anim-decalage: 170px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: var(--police);
+  color: var(--blanc);
+  -webkit-font-smoothing: antialiased;
+}
+
+#stage {
+  position: absolute;
+  left: 0; top: 0;
+  width: var(--largeur);
+  height: var(--hauteur);
+  overflow: hidden;
+  background: var(--blanc);
+  transform: none;
+}
+#stage > * { position: absolute; }
+
+/* ====================== HEADER (identique actus) ====================== */
+#photo {
+  left: 0; top: 0;
+  width: var(--largeur);
+  height: var(--photo-hauteur);
+  overflow: hidden;
+}
+#photo rssapp-carousel,
+#photo iframe,
+#photo > * { width: 100%; height: 100%; }
+
+#panneau-bleu {
+  left: 0; top: 0;
+  width: var(--panneau-largeur);
+  height: var(--panneau-hauteur);
+  background: var(--bleu);
+  transform-origin: 0 0;
+  transform: var(--panneau-matrice);
+  box-shadow: 0 -4px 13px 5px var(--lueur-panneau);
+}
+
+#pied {
+  left: 0; top: var(--pied-top);
+  width: var(--largeur);
+  height: var(--pied-hauteur);
+  background: var(--blanc);
+}
+#logo-ufr {
+  left: var(--logo-ufr-x); top: var(--logo-ufr-y);
+  width: var(--logo-ufr-l); height: var(--logo-ufr-h);
+}
+#logo {
+  left: var(--logo-presage-x); top: var(--logo-presage-y);
+  width: var(--logo-presage-l); height: var(--logo-presage-h);
+}
+#logo img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.4));
+}
+
+#horloge {
+  left: var(--horloge-x); top: var(--horloge-y);
+  width: var(--horloge-l); height: var(--horloge-h);
+  display: flex; align-items: center; justify-content: center;
+}
+#horloge #heure {
+  font-size: var(--horloge-taille);
+  font-weight: var(--horloge-graisse);
+  font-family: var(--police);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--blanc);
+}
+
+/* H1 + trait + date (style copié d'#actus) */
+#titre {
+  left: 64px; top: 441px;
+  margin: 0;
+  font-size: var(--titre-taille);
+  font-weight: var(--titre-graisse);
+  font-family: var(--police);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.5px;
+}
+#trait {
+  left: 64px; top: 520px;
+  width: 647px; height: 2px;
+  background: rgba(255,255,255,0.43);
+}
+#date {
+  left: 146px; top: 537px;
+  font-size: var(--date-taille);
+  font-weight: var(--date-graisse);
+  font-family: var(--police);
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.8;
+  color: var(--c-text-muted);
+}
+
+/* ====================== GRILLE 2x2 ====================== */
+#grille-chiffres {
+  position: absolute;
+  left: 40px;
+  top: 636px;
+  width: 1000px;
+  /* Disponible entre 636 et 1740 (avant pied) = 1104px de haut */
+  height: 1104px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 40px;
+}
+
+.carte {
+  position: relative;
+  background: var(--bleu);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--rayon-carte);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.04);
+  overflow: hidden;
+  padding: 22px 26px 24px;
+}
+
+.carte h2 {
+  margin: 0 0 8px;
+  font-size: var(--carte-titre-taille);
+  font-weight: var(--carte-titre-graisse);
+  font-family: var(--police);
+  letter-spacing: 0.2px;
+  color: var(--c-text-muted);
+}
+
+.carte .corps {
+  position: relative;
+  height: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chiffre {
+  font-family: var(--police);
+  font-size: 124px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2px;
+  color: var(--blanc);
+  font-variant-numeric: tabular-nums;
+}
+
+.sous-titre {
+  margin: 14px 0 0;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--c-text-muted);
+  max-width: 380px;
+}
+
+.chiffre-icone {
+  position: absolute;
+  right: 16px; bottom: 14px;
+  width: 86px; height: 86px;
+  color: rgba(255,255,255,0.18);
+  pointer-events: none;
+}
+
+/* Badge "Centre actif" avec point pulsant */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 18px;
+  font-weight: 600;
+  width: fit-content;
+}
+.badge-point {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74,222,128,0.7);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.7); }
+  70%  { box-shadow: 0 0 0 14px rgba(74,222,128,0); }
+  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+}
+.badge.is-rest .badge-point { background: #f87171; animation: none; }
+.badge.is-rest { opacity: 0.85; }
+
+/* Carte 4 — chiffre centré verticalement dans toute la carte */
+.carte.carte-linkedin {
+  display: flex;
+  flex-direction: column;
+}
+.carte.carte-linkedin h2 {
+  flex: 0 0 auto;             /* le titre garde sa taille */
+}
+.carte.carte-linkedin .corps-linkedin {
+  flex: 1 1 auto;             /* prend toute la hauteur restante */
+  height: auto;               /* annule le calc(100% - 40px) de .carte .corps */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* alignement horizontal à gauche */
+  justify-content: center;    /* centrage vertical */
+  text-align: left;
+  gap: 12px;
+}
+.linkedin-bloc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.linkedin-bloc .chiffre {
+  font-size: 124px;
+  line-height: 1;
+  margin: 0;
+}
+.linkedin-bloc .sous-titre {
+  font-size: 18px;
+  margin: 8px 0 0;
+}
+
+.cta:hover { background: #e2ecff; }
+
+.chiffre-icone-fond { right: 26px; top: 50%; transform: translateY(-50%); bottom: auto; width: 110px; height: 110px; opacity: 0.10; }
+
+/* Mention MAJ (coin bas au-dessus du pied blanc) */
+#maj-info {
+  position: absolute;
+  left: 40px; top: 1752px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--c-text-muted);
+  font-family: var(--police);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* ====================== ANIMATIONS data-anim ====================== */
+.js [data-anim] { opacity: 0; }
+.js.go [data-anim="gauche"] {
+  animation: entree-gauche var(--anim-duree) var(--anim-courbe) both;
+  animation-delay: var(--delai, 0ms);
+}
+.js.go [data-anim="droite"] {
+  animation: entree-droite var(--anim-duree) var(--anim-courbe) both;
+  animation-delay: var(--delai, 0ms);
+}
+@keyframes entree-gauche {
+  from { opacity: 0; transform: translateX(calc(-1 * var(--anim-decalage))); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes entree-droite {
+  from { opacity: 0; transform: translateX(var(--anim-decalage)); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Rejouer l'animation quand le kiosque envoie replay-chiffres */
+.rejouer-animation [data-anim] {
+  animation: none !important;
+  opacity: 0;
+}
+
+/* Respect du prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-anim] { opacity: 1; transform: none; animation: none !important; }
+  .badge-point { animation: none; }
+}
+
+/* =====================================================================
+   SORTIE : le panneau bleu se redresse et envahit tout l'écran
+   (le JS pose la classe .chiffres-sortie sur <html>)
+   ===================================================================== */
+
+/* 1. Les contenus disparaissent */
+html.chiffres-sortie #horloge,
+html.chiffres-sortie #titre,
+html.chiffres-sortie #trait,
+html.chiffres-sortie #date,
+html.chiffres-sortie #photo,
+html.chiffres-sortie #grille-chiffres,
+html.chiffres-sortie #pied,
+html.chiffres-sortie #logo-ufr,
+html.chiffres-sortie #logo { z-index: 1; }
+html.chiffres-sortie #maj-info {
+  opacity: 0 !important;
+  transition: opacity 0.4s ease-out !important;
+  pointer-events: none !important;
+}
+
+/* 2. Le panneau bleu : même élément, nouvelle transformation.
+      scale(1.5) sur 1455x1602 couvre largement 1080x1920 une fois
+      redressé : il suffit donc de le placer en (0,0) et de l'agrandir. */
+#panneau-bleu {
+  transition:
+    transform 0.7s cubic-bezier(0.7, 0, 0.3, 1),
+    box-shadow 0.7s ease;
+}
+html.chiffres-sortie #panneau-bleu {
+  transform: matrix(1.4, 0, 0, 1.25, 0, 0) !important;
+  box-shadow: none !important;
+}
+
+/* 3. Le panneau passe devant tout (sauf logo PRESAGE et pied) */
+html.chiffres-sortie #panneau-bleu {
+  z-index: 5;
+}
+#logo, #logo-ufr, #pied { z-index: 10; }
+#pied { z-index: 9; }
+
+/* 4. Les cartes elles-mêmes disparaissent proprement */
+html.chiffres-sortie .carte {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease-out !important;
+}
