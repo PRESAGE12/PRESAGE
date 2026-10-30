@@ -35,7 +35,7 @@
     { id: 'page-a', url: 'pages/planning.html', replay: 'kiosque:replay-planning', duration: 30000 },
     { id: 'page-b', url: 'pages/actus.html',    replay: 'kiosque:replay-actus',    duration: 21000 },
     { id: 'page-c', url: 'pages/chiffres.html', replay: 'kiosque:replay-chiffres', duration: 15000, exit: 'kiosque:exit-chiffres' },
-    { id: 'page-d', url: 'pages/visite.html',   replay: 'kiosque:replay-visite',   duration: 116000 }
+    { id: 'page-d', url: 'pages/visite.html',   replay: 'kiosque:replay-visite',   duration: 117000 }
   ];
 
   const stage = document.getElementById('stage');
