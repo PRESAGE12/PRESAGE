@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRESAGE – Orientation 1er étage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="orientation.css" />
+</head>
+<body data-orientation="portrait">
+  <div id="stage" class="stage">
+    <header class="hero">
+      <div class="hero-widget">
+        <section id="photos-presage" data-photos-carousel data-base="../"></section>
+      </div>
+      <img class="hero__logo" src="../assets/presage_logo.png" alt="PRESAGE" />
+      <div class="hero__clock" id="horloge"><span id="heure">--:--</span></div>
+      <div class="hero__titles">
+        <h1 class="hero__title">Orientation 1er étage</h1>
+        <p class="hero__date" id="date">Chargement…</p>
+      </div>
+    </header>
+
+    <main class="orientation" aria-label="Sessions du jour au premier étage">
+      <section id="sessions" class="orientation__sessions" aria-label="Toutes les sessions du jour au premier étage"></section>
+      <p id="empty-state" class="orientation__empty" hidden>Aucune session aujourd’hui à l’étage.</p>
+    </main>
+
+    <footer class="footer" aria-label="UFR3S Médecine et Université de Lille">
+      <img src="../assets/ufr3s_logo.png" alt="UFR3S Médecine · Université de Lille" class="footer__logo" />
+    </footer>
+  </div>
+
+  <link rel="stylesheet" href="../css/photos-carousel.css" />
+  <script src="../js/photos-carousel.js" defer></script>
+  <script src="orientation.js" defer></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
